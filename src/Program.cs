@@ -68,10 +68,8 @@ class Program
     private static string GetArgumentsString(IEnumerable<string> arguments) 
     {
         var argumentsStringBuilder = new StringBuilder();
-        foreach (var argument in arguments)
-        {
-            argumentsStringBuilder.AppendJoin(" ", argument);
-        }
+        
+        argumentsStringBuilder.AppendJoin(" ", arguments);
 
         return argumentsStringBuilder.ToString();
     }
