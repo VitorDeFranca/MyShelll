@@ -84,6 +84,7 @@ class Program
         if (!string.IsNullOrEmpty(filePath) && IsAnExecutable(command))
         {
             Process.Start(command, arguments).WaitForExit();
+            Console.WriteLine(IsAnExecutable(command));
             return;
         }
 
