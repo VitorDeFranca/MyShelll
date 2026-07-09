@@ -5,7 +5,7 @@ using System.Text;
 class Program
 {
     #region Shell Variables
-    private static IEnumerable<string> ShellBuiltIns = new List<string> { "echo", "exit", "type" };
+    private static IEnumerable<string> ShellBuiltIns = new List<string> { "echo", "exit", "type", "pwd" };
     #endregion
 
     static void Main()
@@ -32,6 +32,10 @@ class Program
 
                 case "type":
                     TypeCommandHandler(arguments);
+                    break;
+
+                case "pwd":
+                    PwdCommandHandler(arguments);
                     break;
 
                 default:
@@ -74,6 +78,16 @@ class Program
     private static void EchoCommandHandler(IEnumerable<string> arguments)
     {
         Console.WriteLine(GetArgumentsString(arguments));
+    }
+
+    private static void PwdCommandHandler(IEnumerable<string> arguments)
+    {
+        if (arguments.Any())
+        {
+            Console.WriteLine($"pwd: too many arguments");
+            return;
+        }
+        Console.WriteLine(Directory.GetCurrentDirectory());
     }
 
     #region Not A Shell BuiltIn Methods
