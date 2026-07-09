@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -34,7 +35,7 @@ class Program
                     break;
 
                 default:
-                    NotAValidCommandHandler(command);
+                    NotAShellBuiltInHandler(command, arguments);
                     break;
             };
         }
@@ -56,21 +57,9 @@ class Program
             return;
         }
 
-        var rawPath = Environment.GetEnvironmentVariable("PATH");
-        var directories = rawPath?.Split(Path.PathSeparator);
-        var filePath = string.Empty;
-
-        foreach (var dir in directories)
-        {
-            var fullPath = Path.Combine(dir, word);
-            if (File.Exists(fullPath) && HasExecutePermission(fullPath))
-            {
-                filePath = fullPath;
-                break;
-            }
-        }
-
-        if (!string.IsNullOrEmpty(filePath))
+        
+        var filePath = GetFullFilePathFromPathVariable(word);
+        if (!string.IsNullOrEmpty(filePath) && IsAnExecutable(filePath))
         {
             Console.WriteLine($"{word} is {filePath}");
             return;
@@ -78,22 +67,33 @@ class Program
 
 
         Console.WriteLine($"{word}: not found");
-    }
-    
+    } 
 
     private static bool IsWordShellBuiltIn(string word) => ShellBuiltIns.Contains(word);
         
     #endregion
+    private static void EchoCommandHandler(IEnumerable<string> arguments)
+    {
+        Console.WriteLine(GetArgumentsString(arguments));
+    }
+
+    #region Not A Shell BuiltIn Methods
+    private static void NotAShellBuiltInHandler(string command, IEnumerable<string> arguments)
+    {
+        var filePath = GetFullFilePathFromPathVariable(command);
+        if (!string.IsNullOrEmpty(filePath) && IsAnExecutable(command))
+        {
+            Process.Start(filePath, arguments);
+        }
+
+        NotAValidCommandHandler(command);
+    }
 
     private static void NotAValidCommandHandler(string command)
     {
         Console.WriteLine($"{command}: command not found");
     }
-
-    private static void EchoCommandHandler(IEnumerable<string> arguments)
-    {
-        Console.WriteLine(GetArgumentsString(arguments));
-    }
+    #endregion
 
     #region Helper Methods
     private static string GetArgumentsString(IEnumerable<string> arguments) 
@@ -105,45 +105,76 @@ class Program
         return argumentsStringBuilder.ToString();
     }
 
-    public static bool HasExecutePermission(string filePath)
+    public static string? GetFullFilePathFromPathVariable(string fileName) 
+    {
+        var rawPath = Environment.GetEnvironmentVariable("PATH");
+        if (rawPath == null)
+        {
+            Console.WriteLine("PATH environment variable is not set");
+            return null;
+        }
+
+        var directories = rawPath?.Split(Path.PathSeparator);
+        string? filePath = null;
+
+        foreach (var dir in directories)
+        {
+            var fullPath = Path.Combine(dir, fileName);
+            if (File.Exists(fullPath))
+            {
+                filePath = fullPath;
+                break;
+            }
+        }
+
+        return filePath;
+    }
+
+    public static bool IsAnExecutable(string filePath)
     {
         if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath))
             return false;
 
         // On Unix-like systems (Linux, macOS), check the execute bits
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ||
-            RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-        {
-            try
-            {
-                var mode = File.GetUnixFileMode(filePath);
-                // Check if any execute bit is set (user, group, or other)
-                return (mode & UnixFileMode.UserExecute) != 0 ||
-                       (mode & UnixFileMode.GroupExecute) != 0 ||
-                       (mode & UnixFileMode.OtherExecute) != 0;
-            }
-            catch
-            {
-                return false; // Permission denied or file inaccessible
-            }
-        }
+                RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            return IsAnUnixExecutable(filePath);
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-        {
-            // On Windows, "executable" means the extension is in PATHEXT
-            string ext = Path.GetExtension(filePath).ToLowerInvariant();
-            string pathext = Environment.GetEnvironmentVariable("PATHEXT")
-                             ?? ".COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC";
-
-            foreach (string exeExt in pathext.Split(';', StringSplitOptions.RemoveEmptyEntries))
-            {
-                if (ext == exeExt.ToLowerInvariant())
-                    return true;
-            }
-            return false;
-        }
+        // On Windows, "executable" means the extension is in PATHEXT
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) 
+            return IsAWindowsExecutable(filePath);
 
         return false;
+    }
+
+    private static bool IsAWindowsExecutable(string filePath)
+    {
+        string ext = Path.GetExtension(filePath).ToLowerInvariant();
+        string pathext = Environment.GetEnvironmentVariable("PATHEXT")
+                         ?? ".COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC";
+
+        foreach (string exeExt in pathext.Split(Path.PathSeparator, StringSplitOptions.RemoveEmptyEntries))
+        {
+            if (ext == exeExt.ToLowerInvariant())
+                return true;
+        }
+        return false;
+    }
+
+    private static bool IsAnUnixExecutable(string filePath)
+    {
+        try
+        {
+            var mode = File.GetUnixFileMode(filePath);
+            // Check if any execute bit is set (user, group, or other)
+            return (mode & UnixFileMode.UserExecute) != 0 ||
+                   (mode & UnixFileMode.GroupExecute) != 0 ||
+                   (mode & UnixFileMode.OtherExecute) != 0;
+        }
+        catch
+        {
+            return false; // Permission denied or file inaccessible
+        }
     }
     #endregion
 }
