@@ -58,7 +58,7 @@ class Program
         }
 
         
-        var filePath = GetFullFilePathFromPathVariable(word);
+        var filePath = GetFullExecutableFilePathFromPathVariable(word);
         if (!string.IsNullOrEmpty(filePath))
         {
             Console.WriteLine($"{word} is {filePath}");
@@ -79,8 +79,8 @@ class Program
     #region Not A Shell BuiltIn Methods
     private static void NotAShellBuiltInHandler(string command, IEnumerable<string> arguments)
     {
-        var filePath = GetFullFilePathFromPathVariable(command);
-        if (!string.IsNullOrEmpty(filePath) && IsAnExecutable(filePath))
+        var filePath = GetFullExecutableFilePathFromPathVariable(command);
+        if (!string.IsNullOrEmpty(filePath))
         {
             Process.Start(command, arguments).WaitForExit();
             return;
@@ -105,7 +105,7 @@ class Program
         return argumentsStringBuilder.ToString();
     }
 
-    public static string? GetFullFilePathFromPathVariable(string fileName) 
+    public static string? GetFullExecutableFilePathFromPathVariable(string fileName) 
     {
         var rawPath = Environment.GetEnvironmentVariable("PATH");
         if (rawPath == null)
@@ -120,7 +120,7 @@ class Program
         foreach (var dir in directories)
         {
             var fullPath = Path.Combine(dir, fileName);
-            if (File.Exists(fullPath))
+            if (File.Exists(fullPath) && IsAnExecutable(fullPath))
             {
                 filePath = fullPath;
                 break;
