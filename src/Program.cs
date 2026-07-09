@@ -65,7 +65,6 @@ class Program
             return;
         }
 
-
         Console.WriteLine($"{word}: not found");
     } 
 
@@ -81,10 +80,9 @@ class Program
     private static void NotAShellBuiltInHandler(string command, IEnumerable<string> arguments)
     {
         var filePath = GetFullFilePathFromPathVariable(command);
-        if (!string.IsNullOrEmpty(filePath) && IsAnExecutable(command))
+        if (!string.IsNullOrEmpty(filePath) && IsAnExecutable(filePath))
         {
-            Process.Start(command, arguments).WaitForExit();
-            Console.WriteLine(IsAnExecutable(command));
+            Process.Start(filePath, arguments).WaitForExit();
             return;
         }
 
