@@ -5,7 +5,7 @@ using System.Text;
 class Program
 {
     #region Shell Variables
-    private static IEnumerable<string> ShellBuiltIns = new List<string> { "echo", "exit", "type", "pwd" };
+    private static IEnumerable<string> ShellBuiltIns = new List<string> { "echo", "exit", "type", "pwd", "cd" };
     #endregion
 
     static void Main()
@@ -36,6 +36,10 @@ class Program
 
                 case "pwd":
                     PwdCommandHandler(arguments);
+                    break;
+
+                case "cd":
+                    CdCommandHandler(arguments);
                     break;
 
                 default:
@@ -88,6 +92,31 @@ class Program
             return;
         }
         Console.WriteLine(Directory.GetCurrentDirectory());
+    }
+
+    private static void CdCommandHandler(IEnumerable<string> arguments)
+    {
+        if (arguments.Count() != 1)
+        {
+            Console.WriteLine("cd: invalid amount of arguments");
+            return;
+        }
+
+        var path = arguments.First();
+        if (path.StartsWith('/'))
+        {
+            try
+            {
+                Directory.SetCurrentDirectory(path);
+            }
+            catch (Exception ex) when 
+                (ex is DirectoryNotFoundException || ex is FileNotFoundException)
+            {
+                Console.WriteLine($"cd: {path}: No such file or directory");
+            }
+            return;
+        }
+
     }
 
     #region Not A Shell BuiltIn Methods
