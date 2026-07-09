@@ -59,7 +59,7 @@ class Program
 
         
         var filePath = GetFullFilePathFromPathVariable(word);
-        if (!string.IsNullOrEmpty(filePath) && IsAnExecutable(filePath))
+        if (!string.IsNullOrEmpty(filePath))
         {
             Console.WriteLine($"{word} is {filePath}");
             return;
