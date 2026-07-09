@@ -83,7 +83,7 @@ class Program
         var filePath = GetFullFilePathFromPathVariable(command);
         if (!string.IsNullOrEmpty(filePath) && IsAnExecutable(command))
         {
-            Process.Start(command, arguments);
+            Process.Start(command, arguments).WaitForExit();
             return;
         }
 
