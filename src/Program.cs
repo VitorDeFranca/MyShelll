@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.RegularExpressions;
 
 class Program
 {
@@ -20,7 +21,7 @@ class Program
                 continue;
 
             var command = userInput.Split(' ')[0];
-            var arguments = userInput.Split(' ').Skip(1);
+            var arguments = GetArguments(userInput);
 
             if (string.Equals(command, "exit")) break;
 
@@ -140,6 +141,59 @@ class Program
     #endregion
 
     #region Helper Methods
+    private static IEnumerable<string> GetArguments(string userInput)
+    {
+        if (string.IsNullOrEmpty(userInput) || string.IsNullOrWhiteSpace(userInput))
+            return [];
+
+        var whitespaceTreatedUserInput = ReplaceWhitespacesOutsideSingleQuotes(userInput);
+
+        var splitInput = whitespaceTreatedUserInput.Split(';');
+        return splitInput.Skip(1);
+    }
+
+    public static string ReplaceWhitespacesOutsideSingleQuotes(string userInput)
+    {
+        if (string.IsNullOrEmpty(userInput)) return userInput;
+
+        StringBuilder result = new StringBuilder();
+        bool isInsideSingleQuotes = false;
+
+        for (int i = 0; i < userInput.Length; i++)
+        {
+            char c = userInput[i];
+
+            // Detects if the character is a single quote
+            if (c == '\'')
+            {
+                // Inverts the state, indicating whether we are inside or outside single quotes
+                isInsideSingleQuotes = !isInsideSingleQuotes;
+                result.Append(c); // Keeps the single quote
+                continue;
+            }
+
+            // If we are outside single quotes and the character is a whitespace
+            if (!isInsideSingleQuotes && char.IsWhiteSpace(c))
+            {
+                // Replace the whitespace with a semicolon
+                result.Append(';');
+
+                // Jumps to the next character, skipping any additional whitespaces
+                while (i + 1 < userInput.Length && char.IsWhiteSpace(userInput[i + 1]))
+                {
+                    i++;
+                }
+            }
+            else
+            {
+                // Any other character (including whitespaces inside single quotes) is appended
+                result.Append(c);
+            }
+        }
+
+        return result.ToString();
+    }
+
     private static string GetArgumentsString(IEnumerable<string> arguments) 
     {
         var argumentsStringBuilder = new StringBuilder();
