@@ -98,25 +98,23 @@ class Program
     {
         if (arguments.Count() != 1)
         {
-            Console.WriteLine("cd: invalid amount of arguments");
+            Console.WriteLine("cd: Invalid amount of arguments");
             return;
         }
 
         var path = arguments.First();
-        if (path.StartsWith('/'))
+        
+        try
         {
-            try
-            {
-                Directory.SetCurrentDirectory(path);
-            }
-            catch (Exception ex) when 
-                (ex is DirectoryNotFoundException || ex is FileNotFoundException)
-            {
-                Console.WriteLine($"cd: {path}: No such file or directory");
-            }
-            return;
+            Directory.SetCurrentDirectory(path);
         }
-
+        catch (Exception ex) when 
+            (ex is DirectoryNotFoundException || ex is FileNotFoundException)
+        {
+            Console.WriteLine($"cd: {path}: No such file or directory");
+        }
+        return;
+        
     }
 
     #region Not A Shell BuiltIn Methods
