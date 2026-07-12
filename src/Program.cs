@@ -103,7 +103,10 @@ class Program
         }
 
         var path = arguments.First();
-        
+
+        if (string.Equals(path, "~"))
+            path = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+
         try
         {
             Directory.SetCurrentDirectory(path);
