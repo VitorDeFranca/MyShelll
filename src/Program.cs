@@ -168,7 +168,6 @@ class Program
             {
                 // Inverts the state, indicating whether we are inside or outside single quotes
                 isInsideSingleQuotes = !isInsideSingleQuotes;
-                result.Append(c); // Keeps the single quote
                 continue;
             }
 
