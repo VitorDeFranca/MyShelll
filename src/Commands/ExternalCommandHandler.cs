@@ -15,17 +15,17 @@ namespace CodeCrafters.Shell.src.Commands
             CommandName = commandName;
         }
 
-        public void Execute(string[] arguments)
+        public CommandResult Execute(string[] arguments)
         {
 
             var filePath = OSEnvironmentHelpers.GetFullExecutableFilePathFromPathVariable(CommandName);
             if (!string.IsNullOrEmpty(filePath))
             {
                 Process.Start(CommandName, arguments).WaitForExit();
-                return;
+                return new CommandResult($"{CommandName} executed successfully");
             }
 
-            Console.WriteLine($"{CommandName}: nor command nor executable found");
+            return new CommandResult($"{CommandName}: nor command nor executable found");
         }
     }
 }

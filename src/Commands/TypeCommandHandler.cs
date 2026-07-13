@@ -9,30 +9,27 @@ namespace CodeCrafters.Shell.src.Commands
     {
         public string CommandName => "type";
 
-        public void Execute(string[] arguments)
+        public CommandResult Execute(string[] arguments)
         {
             if (arguments.Count() != 1)
             {
-                Console.WriteLine($"{ArgumentParser.GetArgumentsString(arguments)} is not a valid argument for 'type'");
-                return;
+                return new CommandResult($"{ArgumentParser.GetArgumentsString(arguments)} is not a valid argument for 'type'");
             }
 
             var word = arguments.First();
             if (CommandFactory.IsShellBuiltIn(word))
             {
-                Console.WriteLine($"{word} is a shell builtin");
-                return;
+                return new CommandResult ($"{word} is a shell builtin");
             }
 
 
             var filePath = OSEnvironmentHelpers.GetFullExecutableFilePathFromPathVariable(word);
             if (!string.IsNullOrEmpty(filePath))
             {
-                Console.WriteLine($"{word} is {filePath}");
-                return;
+                return new CommandResult ($"{word} is {filePath}");
             }
 
-            Console.WriteLine($"{word}: not found");
+            return new CommandResult($"{word}: not found");
         }
     }
 }

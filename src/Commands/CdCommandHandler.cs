@@ -8,12 +8,11 @@ namespace CodeCrafters.Shell.src.Commands
     {
         public string CommandName => "cd";
 
-        public void Execute(string[] arguments)
+        public CommandResult Execute(string[] arguments)
         {
             if (arguments.Count() != 1)
             {
-                Console.WriteLine("cd: Invalid amount of arguments");
-                return;
+                return new CommandResult("cd: Invalid amount of arguments.");
             }
 
             var path = arguments.First();
@@ -28,9 +27,15 @@ namespace CodeCrafters.Shell.src.Commands
             catch (Exception ex) when
                 (ex is DirectoryNotFoundException || ex is FileNotFoundException)
             {
-                Console.WriteLine($"cd: {path}: No such file or directory");
+                return new CommandResult($"cd {path}: No such file or directory");
             }
-            return;
+            catch (Exception ex) when
+                (ex is ArgumentException)
+            {
+                return new CommandResult($"cd: path cannot be empty");
+            }
+
+            return new CommandResult();
         }
     }
 }

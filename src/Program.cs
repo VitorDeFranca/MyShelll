@@ -21,10 +21,14 @@ class Program
             var command = userInput.Split(' ')[0];
             var arguments = ArgumentParser.GetArguments(userInput);
 
-            if (string.Equals(command, "exit")) break;
 
             var handler = CommandFactory.GetHandler(command);
-            handler.Execute(arguments);
+            var commandResult = handler.Execute(arguments);
+
+            if (!string.IsNullOrEmpty(commandResult.Message))
+                Console.WriteLine(commandResult.Message);
+
+            if (commandResult.Exit) break;
         }
     }
 }

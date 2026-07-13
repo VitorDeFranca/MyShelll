@@ -14,6 +14,7 @@ namespace CodeCrafters.Shell.src.Commands
             RegisterBuiltIn(new TypeCommandHandler());
             RegisterBuiltIn(new PwdCommandHandler());
             RegisterBuiltIn(new CdCommandHandler());
+            RegisterBuiltIn(new ExitCommandHandler());
         }
 
         public static void RegisterBuiltIn(ICommandHandler handler)

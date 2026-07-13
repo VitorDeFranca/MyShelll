@@ -7,6 +7,6 @@ namespace CodeCrafters.Shell.src.Commands
     public interface ICommandHandler
     {
         string CommandName { get; }
-        void Execute(string[] arguments);
+        CommandResult Execute(string[] arguments);
     }
 }

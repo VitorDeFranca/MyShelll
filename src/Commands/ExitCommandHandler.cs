@@ -4,13 +4,13 @@ using System.Text;
 
 namespace CodeCrafters.Shell.src.Commands
 {
-    internal class EchoCommandHandler : ICommandHandler
+    public class ExitCommandHandler : ICommandHandler
     {
-        public string CommandName => "echo";
+        public string CommandName => "exit";
 
         public CommandResult Execute(string[] arguments)
         {
-            return new CommandResult(ArgumentParser.GetArgumentsString(arguments));
+            return new CommandResult($"{CommandName}: exiting shell...", exit: true);
         }
     }
 }
