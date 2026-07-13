@@ -10,7 +10,7 @@ namespace CodeCrafters.Shell.src.Commands
 
         public CommandResult Execute(string[] arguments)
         {
-            return new CommandResult($"{CommandName}: exiting shell...", exit: true);
+            return new CommandResult(true);
         }
     }
 }
