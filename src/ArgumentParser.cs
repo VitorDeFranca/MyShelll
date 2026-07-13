@@ -32,9 +32,12 @@ namespace CodeCrafters.Shell.src
                 // Detects if the character is a single quote
                 if (c == '\'')
                 {
+                    // Append single quote if inside double quotes
+                    if (isInsideDoubleQuotes) 
+                        result.Append(c); 
+                    else
                     // Inverts the state, indicating whether we are inside or outside single quotes
-                    isInsideSingleQuotes = !isInsideSingleQuotes;
-                    if (isInsideDoubleQuotes) result.Append(c); // Append single quote if inside double quotes
+                        isInsideSingleQuotes = !isInsideSingleQuotes;
                     continue;
                 }
                 else if (c == '\"')
