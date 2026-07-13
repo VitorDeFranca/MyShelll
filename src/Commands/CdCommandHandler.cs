@@ -27,7 +27,7 @@ namespace CodeCrafters.Shell.src.Commands
             catch (Exception ex) when
                 (ex is DirectoryNotFoundException || ex is FileNotFoundException)
             {
-                return new CommandResult($"cd {path}: No such file or directory");
+                return new CommandResult($"cd: {path}: No such file or directory");
             }
             catch (Exception ex) when
                 (ex is ArgumentException)
