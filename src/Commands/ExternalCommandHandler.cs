@@ -25,7 +25,7 @@ namespace CodeCrafters.Shell.src.Commands
                 return new CommandResult();
             }
 
-            return new CommandResult($"{CommandName}: command not found\"");
+            return new CommandResult($"{CommandName}: command not found");
         }
     }
 }
