@@ -22,7 +22,7 @@ namespace CodeCrafters.Shell.src.Commands
             if (!string.IsNullOrEmpty(filePath))
             {
                 Process.Start(CommandName, arguments).WaitForExit();
-                return new CommandResult($"{CommandName} executed successfully");
+                return new CommandResult();
             }
 
             return new CommandResult($"{CommandName}: nor command nor executable found");
