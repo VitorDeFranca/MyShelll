@@ -47,7 +47,7 @@ namespace CodeCrafters.Shell.src
                 }
                 else if (c == '\\')
                 {
-                    if (!isInsideDoubleQuotes && !isInsideSingleQuotes)
+                    if (!isInsideSingleQuotes)
                     {
                         i++;
                         if (i < userInput.Length)
