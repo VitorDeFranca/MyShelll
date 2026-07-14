@@ -45,6 +45,15 @@ namespace CodeCrafters.Shell.src
                     isInsideDoubleQuotes = !isInsideDoubleQuotes;
                     continue;
                 }
+                else if (c == '\\')
+                {
+                    if (!isInsideDoubleQuotes && !isInsideSingleQuotes)
+                    {
+                        i++;
+                        if (i < userInput.Length)
+                            c = userInput[i];
+                    }
+                }
 
                 // If we are outside single quotes and the character is a whitespace
                 if (!isInsideSingleQuotes && !isInsideDoubleQuotes && char.IsWhiteSpace(c))
