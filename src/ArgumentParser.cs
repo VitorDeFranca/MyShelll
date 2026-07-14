@@ -24,6 +24,7 @@ namespace CodeCrafters.Shell.src
             var result = new StringBuilder();
             var isInsideSingleQuotes = false;
             var isInsideDoubleQuotes = false;
+            var specialCharactersEscapedInDoubleQuotes = new HashSet<char> { '\\', '\"'};
 
             for (int i = 0; i < userInput.Length; i++)
             {
@@ -52,11 +53,15 @@ namespace CodeCrafters.Shell.src
                 }
                 else if (c == '\\')
                 {
-                    if (!isInsideDoubleQuotes && !isInsideSingleQuotes)
+                    if (!isInsideSingleQuotes)
                     {
                         i++;
                         if (i < userInput.Length)
-                            c = userInput[i];
+                        {
+                            var nextChar = userInput[i];
+                            if (!isInsideDoubleQuotes || specialCharactersEscapedInDoubleQuotes.Contains(nextChar))
+                                c = nextChar;
+                        }
                     }
                 }
 
