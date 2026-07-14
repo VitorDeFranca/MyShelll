@@ -18,7 +18,7 @@ class Program
             if (string.IsNullOrEmpty(userInput) || string.IsNullOrWhiteSpace(userInput))
                 continue;
 
-            var command = ArgumentParser.ReplaceWhitespacesOutsideQuotes(userInput);
+            var command = CommandParser.GetCommandName(userInput);
             var arguments = ArgumentParser.GetArguments(userInput.Replace(command, string.Empty));
 
 
