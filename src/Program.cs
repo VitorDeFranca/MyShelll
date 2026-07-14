@@ -18,7 +18,7 @@ class Program
             if (string.IsNullOrEmpty(userInput) || string.IsNullOrWhiteSpace(userInput))
                 continue;
 
-            var command = userInput.Split(' ')[0];
+            var command = CommandParser.GetCommandName(userInput);
             var arguments = ArgumentParser.GetArguments(userInput);
 
 
