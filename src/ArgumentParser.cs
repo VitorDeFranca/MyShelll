@@ -42,12 +42,17 @@ namespace CodeCrafters.Shell.src
                 }
                 else if (c == '\"')
                 {
-                    isInsideDoubleQuotes = !isInsideDoubleQuotes;
+                    if (!isInsideSingleQuotes)
+                        isInsideDoubleQuotes = !isInsideDoubleQuotes;
+                    else
+                    {
+                        result.Append(c);
+                    }
                     continue;
                 }
                 else if (c == '\\')
                 {
-                    if (!isInsideSingleQuotes)
+                    if (!isInsideDoubleQuotes && !isInsideSingleQuotes)
                     {
                         i++;
                         if (i < userInput.Length)
