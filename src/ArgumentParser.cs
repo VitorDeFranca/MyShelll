@@ -11,6 +11,7 @@ namespace CodeCrafters.Shell.src
             if (string.IsNullOrEmpty(userInput) || string.IsNullOrWhiteSpace(userInput))
                 return [];
 
+            //TODO: Melhorar a nomeação desse método, faz um tratamento de string que vai alem de replace whitespace
             var whitespaceTreatedUserInput = ReplaceWhitespacesOutsideQuotes(userInput);
 
             var splitInput = whitespaceTreatedUserInput.Split(';');
@@ -30,6 +31,7 @@ namespace CodeCrafters.Shell.src
             {
                 var c = userInput[i];
 
+                //TODO: Unificar essa lógca tanto de command parser quanto de arguent parser.
                 // Detects if the character is a single quote
                 if (c == '\'')
                 {

@@ -13,15 +13,32 @@ namespace CodeCrafters.Shell.src
 
             var sb = new StringBuilder();
             var isInsideSingleQuotes = false;
+            var isInsideDoubleQuotes = false;
             for (int i = 0; i < userInput.Length; i++)
             {
                 var c = userInput[i];
+                // Detects if the character is a single quote
                 if (c == '\'')
                 {
-                    isInsideSingleQuotes = !isInsideSingleQuotes;
+                    // Append single quote if inside double quotes
+                    if (isInsideDoubleQuotes)
+                        sb.Append(c);
+                    else
+                        // Inverts the state, indicating whether we are inside or outside single quotes
+                        isInsideSingleQuotes = !isInsideSingleQuotes;
                     continue;
                 }
-                else if (c == ' ' && !isInsideSingleQuotes)
+                else if (c == '\"')
+                {
+                    if (!isInsideSingleQuotes)
+                        isInsideDoubleQuotes = !isInsideDoubleQuotes;
+                    else
+                    {
+                        sb.Append(c);
+                    }
+                    continue;
+                }
+                else if (c == ' ' && !isInsideSingleQuotes && !isInsideDoubleQuotes)
                 {
                     break;
                 }
