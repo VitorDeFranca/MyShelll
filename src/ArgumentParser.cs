@@ -1,15 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.Text;
 
 namespace CodeCrafters.Shell.src
 {
     public static class ArgumentParser
     {
-        public static string[] GetArguments(string userInput)
+        public static string[] GetArguments(string userInput, string command)
         {
             if (string.IsNullOrEmpty(userInput) || string.IsNullOrWhiteSpace(userInput))
                 return [];
+
+            // Remove the command from the user input to isolate the arguments
+            int index = userInput.IndexOf(command, StringComparison.Ordinal);
+            if (!(index < 0)) userInput = userInput.Remove(index, command.Length);
 
             //TODO: Melhorar a nomeação desse método, faz um tratamento de string que vai alem de replace whitespace
             var whitespaceTreatedUserInput = ReplaceWhitespacesOutsideQuotes(userInput);

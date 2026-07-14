@@ -19,7 +19,7 @@ class Program
                 continue;
 
             var command = CommandParser.GetCommandName(userInput);
-            var arguments = ArgumentParser.GetArguments(userInput.Replace(command, string.Empty));
+            var arguments = ArgumentParser.GetArguments(userInput, command);
 
 
             var handler = CommandFactory.GetHandler(command);
