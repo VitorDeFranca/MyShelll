@@ -9,6 +9,13 @@ namespace CodeCrafters.Shell.src
     {
         public static void Execute(string outputMessage, string redirectionFile)
         {
+            var directory = Path.GetDirectoryName(redirectionFile);
+
+            if (!string.IsNullOrEmpty(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+
             File.AppendAllText(
                 redirectionFile,
                 outputMessage + Environment.NewLine
