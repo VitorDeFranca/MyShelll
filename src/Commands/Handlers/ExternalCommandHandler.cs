@@ -40,7 +40,18 @@ namespace CodeCrafters.Shell.src.Commands.Handlers
             var output = process.StandardOutput.ReadToEnd();
             process.WaitForExit();
 
-            return new CommandResult(CommandResultType.Success, output);
+            return new CommandResult(CommandResultType.Success, TrimTrailingNewLine(output));
+        }
+
+        private static string TrimTrailingNewLine(string output)
+        {
+            if (output.EndsWith("\r\n", StringComparison.Ordinal))
+                return output[..^2];
+
+            if (output.EndsWith("\n", StringComparison.Ordinal))
+                return output[..^1];
+
+            return output;
         }
     }
 }
