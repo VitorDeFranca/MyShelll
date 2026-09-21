@@ -25,7 +25,7 @@ namespace CodeCrafters.Shell.src.Commands.Handlers
                 return new CommandResult(CommandResultType.Success, string.Empty);
             }
 
-            return new CommandResult(CommandResultType.Error, $"{CommandName}: command not found");
+            return new CommandResult(CommandResultType.Success, $"{CommandName}: command not found");
         }
     }
 }
