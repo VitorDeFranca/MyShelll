@@ -112,7 +112,7 @@ namespace CodeCrafters.Shell.src.Arguments
             for (var i = 0; i < arguments.Length; i++)
             {
                 var argument = arguments[i];
-                if (argument.Equals(">"))
+                if (argument.Equals(">") || argument.Equals("1>"))
                 {
                     return new ArgumentParserResult(arguments.Take(i).ToArray(), true, i + 1 < arguments.Length ? arguments[i + 1] : null);
                 }

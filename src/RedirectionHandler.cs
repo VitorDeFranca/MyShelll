@@ -16,10 +16,12 @@ namespace CodeCrafters.Shell.src
                 Directory.CreateDirectory(directory);
             }
 
-            File.AppendAllText(
-                redirectionFile,
-                outputMessage + Environment.NewLine
-            );
+            // '>' truncates the file, and an empty output still creates it.
+            var contents = string.IsNullOrEmpty(outputMessage)
+                ? string.Empty
+                : outputMessage + Environment.NewLine;
+
+            File.WriteAllText(redirectionFile, contents);
         }
     }
 }

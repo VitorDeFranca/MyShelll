@@ -26,15 +26,17 @@ class Program
             var handler = CommandFactory.GetHandler(command);
             var commandResult = handler.Execute(argumentsResult.ArgumentList);
 
-            if (argumentsResult.HasRedirection && commandResult.Type == CommandResultType.Success)
+            var hasRedirection = argumentsResult.HasRedirection && !string.IsNullOrEmpty(argumentsResult.RedirectionFile);
+
+            if (hasRedirection)
             {
-                RedirectionHandler.Execute(commandResult.Message, argumentsResult.RedirectionFile);
+                // The file is created even when the command fails, only stdout is written to it.
+                var redirectedOutput = commandResult.Type == CommandResultType.Success ? commandResult.Message : string.Empty;
+                RedirectionHandler.Execute(redirectedOutput, argumentsResult.RedirectionFile!);
             }
-            else
-            {
-                if (!string.IsNullOrEmpty(commandResult.Message))
-                    Console.WriteLine(commandResult.Message);
-            }
+
+            if ((!hasRedirection || commandResult.Type == CommandResultType.Error) && !string.IsNullOrEmpty(commandResult.Message))
+                Console.WriteLine(commandResult.Message);
 
 
 
