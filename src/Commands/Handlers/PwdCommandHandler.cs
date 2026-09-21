@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CodeCrafters.Shell.src.Commands
+namespace CodeCrafters.Shell.src.Commands.Handlers
 {
     internal class PwdCommandHandler : ICommandHandler
     {
@@ -11,9 +11,9 @@ namespace CodeCrafters.Shell.src.Commands
         public CommandResult Execute(string[] arguments)
         {
             if (arguments.Any())
-                return new CommandResult($"{CommandName}: too many arguments");
+                return new CommandResult(CommandResultType.Error, $"{CommandName}: too many arguments");
 
-            return new CommandResult(Directory.GetCurrentDirectory());
+            return new CommandResult(CommandResultType.Success, Directory.GetCurrentDirectory());
         }
     }
 }

@@ -1,8 +1,9 @@
-﻿using System;
+﻿using CodeCrafters.Shell.src.Arguments;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace CodeCrafters.Shell.src.Commands
+namespace CodeCrafters.Shell.src.Commands.Handlers
 {
     internal class EchoCommandHandler : ICommandHandler
     {
@@ -10,7 +11,7 @@ namespace CodeCrafters.Shell.src.Commands
 
         public CommandResult Execute(string[] arguments)
         {
-            return new CommandResult(ArgumentParser.GetArgumentsString(arguments));
+            return new CommandResult(CommandResultType.Success, ArgumentParser.GetArgumentsString(arguments));
         }
     }
 }

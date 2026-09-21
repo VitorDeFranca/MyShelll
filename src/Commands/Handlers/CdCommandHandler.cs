@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CodeCrafters.Shell.src.Commands
+namespace CodeCrafters.Shell.src.Commands.Handlers
 {
     internal class CdCommandHandler : ICommandHandler
     {
@@ -12,7 +12,7 @@ namespace CodeCrafters.Shell.src.Commands
         {
             if (arguments.Count() != 1)
             {
-                return new CommandResult("cd: Invalid amount of arguments.");
+                return new CommandResult(CommandResultType.Error, "cd: Invalid amount of arguments.");
             }
 
             var path = arguments.First();
@@ -27,12 +27,12 @@ namespace CodeCrafters.Shell.src.Commands
             catch (Exception ex) when
                 (ex is DirectoryNotFoundException || ex is FileNotFoundException)
             {
-                return new CommandResult($"cd: {path}: No such file or directory");
+                return new CommandResult(CommandResultType.Error, $"cd: {path}: No such file or directory");
             }
             catch (Exception ex) when
                 (ex is ArgumentException)
             {
-                return new CommandResult($"cd: path cannot be empty");
+                return new CommandResult(CommandResultType.Error, $"cd: path cannot be empty");
             }
 
             return new CommandResult();

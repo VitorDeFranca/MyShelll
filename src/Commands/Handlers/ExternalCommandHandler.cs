@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 
-namespace CodeCrafters.Shell.src.Commands
+namespace CodeCrafters.Shell.src.Commands.Handlers
 {
     internal class ExternalCommandHandler : ICommandHandler
     {
@@ -22,10 +22,10 @@ namespace CodeCrafters.Shell.src.Commands
             if (!string.IsNullOrEmpty(filePath))
             {
                 Process.Start(CommandName, arguments).WaitForExit();
-                return new CommandResult();
+                return new CommandResult(CommandResultType.Success, string.Empty);
             }
 
-            return new CommandResult($"{CommandName}: command not found");
+            return new CommandResult(CommandResultType.Error, $"{CommandName}: command not found");
         }
     }
 }

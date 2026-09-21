@@ -1,4 +1,5 @@
 using CodeCrafters.Shell.src;
+using CodeCrafters.Shell.src.Arguments;
 using CodeCrafters.Shell.src.Commands;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
@@ -19,14 +20,23 @@ class Program
                 continue;
 
             var command = CommandParser.GetCommandName(userInput);
-            var arguments = ArgumentParser.GetArguments(userInput, command);
+            var argumentsResult = ArgumentParser.GetArguments(userInput, command);
 
 
             var handler = CommandFactory.GetHandler(command);
-            var commandResult = handler.Execute(arguments);
+            var commandResult = handler.Execute(argumentsResult.ArgumentList);
 
-            if (!string.IsNullOrEmpty(commandResult.Message))
-                Console.WriteLine(commandResult.Message);
+            if (argumentsResult.HasRedirection && commandResult.Type == CommandResultType.Success)
+            {
+                RedirectionHandler.Execute(commandResult.Message, argumentsResult.RedirectionFile);
+            }
+            else
+            {
+                if (!string.IsNullOrEmpty(commandResult.Message))
+                    Console.WriteLine(commandResult.Message);
+            }
+
+
 
             if (commandResult.Exit) break;
         }

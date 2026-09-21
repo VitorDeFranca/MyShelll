@@ -3,24 +3,28 @@ using System.Collections.Generic;
 using System.Data.SqlTypes;
 using System.Text;
 
-namespace CodeCrafters.Shell.src
+namespace CodeCrafters.Shell.src.Arguments
 {
     public static class ArgumentParser
     {
-        public static string[] GetArguments(string userInput, string command)
+        public static ArgumentParserResult GetArguments(string userInput, string command)
         {
             if (string.IsNullOrEmpty(userInput) || string.IsNullOrWhiteSpace(userInput))
-                return [];
+                return new ArgumentParserResult();
 
             // Remove the command from the user input to isolate the arguments
             int index = userInput.IndexOf(command, StringComparison.Ordinal);
             if (!(index < 0)) userInput = userInput.Remove(index, command.Length);
-
+            
             //TODO: Melhorar a nomeação desse método, faz um tratamento de string que vai alem de replace whitespace
             var whitespaceTreatedUserInput = ReplaceWhitespacesOutsideQuotes(userInput);
 
-            var splitInput = whitespaceTreatedUserInput.Split(';');
-            return [..splitInput.Skip(1)];
+            //Jump the space after the command and split arguments by semicolon
+            var splitInput = whitespaceTreatedUserInput.Split(';').Skip(1).ToArray();
+
+            var parserResult = FillRedirectionInfo(splitInput);
+
+            return parserResult;
         }
 
         public static string ReplaceWhitespacesOutsideQuotes(string userInput)
@@ -101,6 +105,19 @@ namespace CodeCrafters.Shell.src
             argumentsStringBuilder.AppendJoin(" ", arguments);
 
             return argumentsStringBuilder.ToString();
+        }
+
+        public static ArgumentParserResult FillRedirectionInfo(string[] arguments)
+        {
+            for (var i = 0; i < arguments.Length; i++)
+            {
+                var argument = arguments[i];
+                if (argument.Equals(">"))
+                {
+                    return new ArgumentParserResult(arguments.Take(i).ToArray(), true, i + 1 < arguments.Length ? arguments[i + 1] : null);
+                }
+            }
+            return new ArgumentParserResult(arguments, false, null);
         }
     }
 }

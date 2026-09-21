@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CodeCrafters.Shell.src.Commands
+namespace CodeCrafters.Shell.src.Commands.Handlers
 {
     public interface ICommandHandler
     {

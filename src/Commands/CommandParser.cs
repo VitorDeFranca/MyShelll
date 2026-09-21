@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CodeCrafters.Shell.src
+namespace CodeCrafters.Shell.src.Commands
 {
     public static class CommandParser
     {

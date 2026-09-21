@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CodeCrafters.Shell.src.Commands
+namespace CodeCrafters.Shell.src.Commands.Handlers
 {
     public class ExitCommandHandler : ICommandHandler
     {
@@ -10,7 +10,7 @@ namespace CodeCrafters.Shell.src.Commands
 
         public CommandResult Execute(string[] arguments)
         {
-            return new CommandResult(true);
+            return new CommandResult(CommandResultType.Success, string.Empty, exit: true);
         }
     }
 }

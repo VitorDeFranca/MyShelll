@@ -7,11 +7,13 @@ namespace CodeCrafters.Shell.src.Commands
     public class CommandResult
     {
         public string Message { get; set; }
+        public CommandResultType Type { get; set; }
         public bool Exit { get; set; } = false;
 
         public CommandResult()
         {
             Message = string.Empty;
+            Type = CommandResultType.Success;
         }
 
         public CommandResult(bool exit)
@@ -19,11 +21,18 @@ namespace CodeCrafters.Shell.src.Commands
             Exit = exit;
         }
 
-        public CommandResult(string message, bool? exit = false)
+        public CommandResult(CommandResultType success, string message, bool? exit = false)
         {
+            Type = success;
             Message = message;
             Exit = exit ?? false;
         }
 
+    }
+
+    public enum CommandResultType
+    {
+        Success,
+        Error,
     }
 }
