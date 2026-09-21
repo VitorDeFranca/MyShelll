@@ -39,8 +39,10 @@ namespace CodeCrafters.Shell.src.Commands.Handlers
 
             var output = process.StandardOutput.ReadToEnd();
             process.WaitForExit();
-
-            return new CommandResult(CommandResultType.Success, TrimTrailingNewLine(output));
+            Console.WriteLine(output);
+            var teste = TrimTrailingNewLine(output);
+            Console.WriteLine(teste);
+            return new CommandResult(CommandResultType.Success, teste);
         }
 
         private static string TrimTrailingNewLine(string output)
